@@ -1,82 +1,224 @@
-#include <conio.h>
-#include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
-
-typedef struct cadastroProdutos{
-
-         int codprod;
-         float valorprod;
-         char nomeprod[15];
-
-}cadprodutos;
-
-int x = 0;
+#define x 100
 
 
-void cadastro(){
-                int sair = 1, i = 0;
-       cadprodutos produto[x];//Declaração de variaveis da funcao cadastro.
+typedef struct cadastroProdutos
+{
 
-   while(sair == 1){
+    int codprod;
+    float valorprod;
+    char nomeprod[15];
+    int qtdp;
 
-       system("cls");
-       printf("\n____________________M&R - CADASTRO DE PRODUTOS____________________\n\n");
+}cadastro;
 
 
-          printf("VALOR DE X:%d\n", x);
+cadastro produtos[x];
+int y = -1;
 
-         printf("CODIGO DO PRODUTO: ");
-           scanf("%d", &produto[x].codprod);
 
-           printf("VALOR UNITARIO DO PRODUTO: ");
-             scanf("%f", &produto[x].valorprod);
-
-             printf("IDENTIFICACAO DO PRODUTO: ");
-               scanf("%s", &produto[x].nomeprod);
-                x++;
-               printf("\nPRODUTO CADASTRADO COM SUCESSO!\n\n");
-
-           for(i = 0; i < x; i++){
-               printf("CODIGO DO PRODUTO: %d\n", produto[i].codprod);
-                 printf("VALOR UNITARIO DO PRODUTO: %.2f\n", produto[i].valorprod);
-             printf("IDENTIFICACAO DO PRODUTO: %s\n", produto[i].nomeprod);
-             }
-
-        printf("DESEJA CADASTRAR OUTRO PRODUTO?\n");
-           printf("[1] - SIM       [2] - NAO\n");
-             scanf("\n%d", &sair);
-
-             if(sair == 2){
-                  main();
-               }
-             }
-}//final da funcao cadastro de produtos.
+void cad();
+void imprime();
+void maiorpreco();
 
 
 
+void cad ()
+{
+    int sair = 1;
+  while(sair == 1){
+    if (y == x - 1){
+        puts("NAO E POSSIVEL CADASTRAR!");
+        return;
+    }
 
-int main(){
+    y++;
+    cadastro prod;
+        system("cls");
+        printf("\n____________________M&R - CADASTRO DE PRODUTOS____________________\n\n");
 
-         int opprincipal = 0;
+        printf("CODIGO DO PRODUTO: ");
+        scanf("%d", &prod.codprod);
 
-         system("cls");
-         system("color 47");
+        printf("VALOR UNITARIO DO PRODUTO: ");
+        scanf("%f", &prod.valorprod);
 
-    while(opprincipal == 0){
-         printf("\n____________________M&R - SISTEMA DE ESTOQUE E RELATORIOS____________________\n\n\n");
-            printf("O QUE DESEJA FAZER?\n\n");
-               printf("[1] - CADASTRAR PRODUTO   "
-                      "[2] - SAIR\n\n");
-                      scanf("%d", &opprincipal);
+        printf("IDENTIFICACAO DO PRODUTO: ");
+        fflush(stdin);
+        gets(&prod.nomeprod);
 
-        if(opprincipal == 1){
-            cadastro();
+        printf("QUANTIDADE EM ESTOQUE: ");
+        scanf("%d", &prod.qtdp);
 
-        }else{
-               exit;
-             }
+        produtos[y] = prod;
+
+        printf("\nPRODUTO CADASTRADO COM SUCESSO!\n\n");
+        printf("CADASTRAR OUTRO PRODUTO?\n");
+        printf("1 - SIM       2 - NAO\n");
+        scanf("%d", &sair);
+
+        if(sair == 2){main();}
+  }
+
+}
+
+void imprime()
+{
+    int i;
+
+    if (y == -1 ){
+        puts("NAO HA PRODUTOS CADASTRADOS");}
+
+    system("cls");
+    printf("\n____________________M&R - RELATORIO COMPLETO____________________\n\n");
+
+for(i = 0; i <= y; i++){
+ printf("COD.: %d      VALOR: %.2f    IDENT.: %s    QTD.: %d\n", produtos[i].codprod, produtos[i].valorprod, produtos[i].nomeprod, produtos[i].qtdp);
+ printf("___________________________________________________\n");
+}
+    system("pause");
+    main();
+}
+
+void maiorpreco()
+{
+    int i = 0, j = 0;
+    float aux = 0;
+
+     system("cls");
+        printf("\n____________________M&R - MAIORES PRECOS____________________\n\n");
+
+    for( i = 0; i <= y; i++ )
+  {
+    for( j = i + 1; j <= y; j++ ) // sempre 1 elemento à frente
+    {
+      if ( produtos[j].valorprod > produtos[i].valorprod )
+      {
+         aux = produtos[j].valorprod;
+         produtos[j].valorprod = produtos[i].valorprod;
+         produtos[i].valorprod = aux;
+      }
+    }
+  } // fim da ordenação
+
+  for( i = 0; i <= y; i++ )
+  {
+    printf("COD: %d          VALOR: %.2f\n", produtos[i].codprod, produtos[i].valorprod);
+    printf("____________________________\n");
+  }
+  system("pause");
+  main();
+
 }
 
 
+int main()
+{
+        int opprincipal = 0, sair = 1, esc1 = 0;
+
+    system("cls");
+    system("color 47");
+
+
+while(opprincipal == 0)
+    {
+        printf("\n_________________M&R - SISTEMA DE ESTOQUE, VENDAS E RELATORIOS_________________\n\n\n");
+        printf("ESCOLHA UMA DAS OPCOES ABAIXO:\n\n");
+        printf("[1] - GERENCIAR ESTOQUE   "
+               "[2] - VENDAS   "
+               "[3] - RELATORIOS   "
+               "[4] - SAIR \n\n");
+        printf("-> ");
+        scanf("%d", &opprincipal);
+
+
+        switch(opprincipal)
+        {
+
+        case 1:
+
+            system("cls");
+            printf("\n____________________M&R - GERENCIADOR DE ESTOQUE____________________\n\n\n");
+            printf("[1] - CADASTRAR NOVO PRODUTO\n"
+            "[2] - EXCLUIR PRODUTO\n"
+            "[3] - CONSULTAR / CONFERIR PRODUTO ESPECIFICO\n"
+            "[4] - SAIR \n\n");
+            printf("-> ");
+            scanf("%d", &esc1);
+
+            switch(esc1)
+            {
+
+            case 1:
+
+                cad();
+                break;
+
+            case 4:
+                main();
+                break;
+
+            default:
+                printf("OPCAO INVALIDA!");
+
+            }
+
+            break;
+
+        case 2:
+
+            printf("EM BREVE FUNCAO DE CONTROLE DE VENDAS!!!\n");
+            printf("pressione qualquer tecla para voltar\n");
+            getch();
+            main();
+
+            break;
+
+        case 3:
+            system("cls");
+
+            printf("\n____________________M&R - RELATORIOS____________________\n\n\n");
+            printf("[1] - GERAR RELATORIO DE PRODUTO ESPECIFICO\n"
+                   "[2] - GERAR RELATORIO COMPLETO\n"
+                   "[3] - GERAR RELATORIO MAIOR PRECO\n"
+                   "[4] - SAIR\n");
+            printf("-> ");
+            scanf("%d", &esc1);
+
+            switch(esc1){
+
+        case 1:
+            break;
+
+        case 2:
+                imprime();
+                break;
+
+        case 3:
+            maiorpreco();
+            break;
+        default:
+            printf("OPCAO INVALIDA!");
+            break;
+        case 4:
+            main();
+            }
+
+        case 4:
+            exit(1);
+
+        default:
+            printf("OPCAO INVALIDA!");
+            getch();
+            main();
+
+        }
+
+    }
+
+    return 0;
 }
+
+
+
+
